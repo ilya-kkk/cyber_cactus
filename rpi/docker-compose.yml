@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  sensor-logger:
+    build: .
+    container_name: cyber-cactus-logger
+    restart: always
+    network_mode: host
+    volumes:
+      - ./logs:/app/logs
+      - ./sensor_log.csv:/app/sensor_log.csv
+    environment:
+      - PYTHONUNBUFFERED=1
+
+networks:
+  sensor-network:
+    driver: bridge 

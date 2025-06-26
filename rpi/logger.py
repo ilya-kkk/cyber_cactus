@@ -6,7 +6,7 @@ from datetime import datetime
 
 IP = "10.0.0.2"          # IP Arduino
 PORT = 5000              # Порт, на котором слушает Arduino
-CSV_FILE = "sensor_log.csv"
+CSV_FILE = "logs/sensor_log.csv"  # Обновленный путь к CSV файлу
 INTERVAL_SECONDS = 60    # Интервал между опросами (в секундах)
 
 # Инициализация CSV файла с заголовком
