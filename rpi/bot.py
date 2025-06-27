@@ -66,7 +66,8 @@ async def main():
 
     print("🤖 Бот запущен. Ожидание команд...")
     
-    # Используем start_polling вместо run_polling для Docker
+    # Инициализируем приложение перед запуском
+    await app.initialize()
     await app.start()
     await app.updater.start_polling()
     
@@ -76,6 +77,7 @@ async def main():
     except KeyboardInterrupt:
         await app.updater.stop()
         await app.stop()
+        await app.shutdown()
 
 if __name__ == "__main__":
     import asyncio
