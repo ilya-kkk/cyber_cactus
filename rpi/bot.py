@@ -6,6 +6,7 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from dotenv import load_dotenv
 import os
+import asyncio
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -58,15 +59,29 @@ async def stat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Запуск бота
 async def main():
-      
     load_dotenv()
     app = ApplicationBuilder().token(os.getenv("BOT_TOKEN")).build()
 
     app.add_handler(CommandHandler("stat", stat_handler))
 
     print("🤖 Бот запущен. Ожидание команд...")
-    await app.run_polling()
+    
+    # Используем start_polling вместо run_polling для Docker
+    await app.start()
+    await app.updater.start_polling()
+    
+    try:
+        # Держим бота запущенным
+        await asyncio.Event().wait()
+    except KeyboardInterrupt:
+        await app.updater.stop()
+        await app.stop()
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    # Исправляем проблему с event loop в Docker
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\n⏹️ Бот остановлен.")
+    except Exception as e:
+        print(f"❌ Ошибка запуска бота: {e}")

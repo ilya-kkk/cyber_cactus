@@ -25,5 +25,8 @@ RUN mkdir -p /app/logs
 # Устанавливаем права на выполнение
 RUN chmod +x bot.py
 
+# Устанавливаем переменную окружения для matplotlib
+ENV MPLBACKEND=Agg
+
 # Запускаем бота
 CMD ["python", "bot.py"] 
