@@ -12,6 +12,20 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
 
+  telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: cyber-cactus-bot
+    restart: always
+    network_mode: host
+    volumes:
+      - ./logs:/app/logs
+      - ./.env:/app/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+    
+
 networks:
   sensor-network:
     driver: bridge 

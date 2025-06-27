@@ -1,0 +1,29 @@
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Устанавливаем системные зависимости для matplotlib
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    libfreetype6-dev \
+    libpng-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Копируем файлы зависимостей
+COPY requirements.txt .
+
+# Устанавливаем Python зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем файл бота
+COPY bot.py .
+
+# Создаем директорию для логов
+RUN mkdir -p /app/logs
+
+# Устанавливаем права на выполнение
+RUN chmod +x bot.py
+
+# Запускаем бота
+CMD ["python", "bot.py"] 
