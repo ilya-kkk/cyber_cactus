@@ -78,10 +78,14 @@ async def main():
         await app.stop()
 
 if __name__ == "__main__":
-    # Исправляем проблему с event loop в Docker
+    import asyncio
     try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            # Если event loop уже запущен (например, в Jupyter или Docker), используем create_task
+            loop.create_task(main())
+        else:
+            loop.run_until_complete(main())
+    except RuntimeError:
+        # Если нет текущего event loop, создаём новый
         asyncio.run(main())
-    except KeyboardInterrupt:
-        print("\n⏹️ Бот остановлен.")
-    except Exception as e:
-        print(f"❌ Ошибка запуска бота: {e}")
