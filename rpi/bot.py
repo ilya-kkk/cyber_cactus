@@ -25,33 +25,34 @@ def generate_plots():
         "humidity_soil_adc": "Влажность почвы (ADC)"
     }
 
-    images = []
+    # Создаем один график с тремя подграфиками
+    fig, axes = plt.subplots(3, 1, figsize=(12, 10))
+    fig.suptitle('Данные с датчиков', fontsize=16)
 
-    for column, label in metrics.items():
-        plt.figure(figsize=(10, 4))
-        plt.plot(df.index, df[column], marker='o', linestyle='-')
-        plt.title(label)
-        plt.xlabel("Время")
-        plt.ylabel(label)
-        plt.grid(True)
+    for i, (column, label) in enumerate(metrics.items()):
+        axes[i].plot(df.index, df[column], linestyle='-', linewidth=2)
+        axes[i].set_title(label)
+        axes[i].set_ylabel(label)
+        axes[i].grid(True, alpha=0.3)
+        
+        # Поворачиваем метки времени для лучшей читаемости
+        axes[i].tick_params(axis='x', rotation=45)
 
-        buf = BytesIO()
-        plt.savefig(buf, format='png')
-        buf.seek(0)
-        images.append(buf)
+    plt.tight_layout()
+    
+    # Сохраняем все графики в один файл
+    buf = BytesIO()
+    plt.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+    buf.seek(0)
+    plt.close()
 
-        plt.close()
-
-    return images
+    return buf
 
 # Хэндлер команды /stat
 async def stat_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        images = generate_plots()
-
-        for img in images:
-            await update.message.reply_photo(photo=img)
-
+        image = generate_plots()
+        await update.message.reply_photo(photo=image)
         logging.info("✅ Графики отправлены пользователю.")
     except Exception as e:
         logging.error(f"Ошибка при обработке /stat: {e}")
