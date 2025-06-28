@@ -22,11 +22,12 @@ def generate_plots():
     metrics = {
         "temperature_C": "Температура (°C)",
         "humidity_air_%": "Влажность воздуха (%)",
-        "humidity_soil_adc": "Влажность почвы (ADC)"
+        "humidity_soil_adc": "Влажность почвы (ADC)",
+        "co2_adc": "CO₂ (ADC)"
     }
 
-    # Создаем один график с тремя подграфиками
-    fig, axes = plt.subplots(3, 1, figsize=(12, 10))
+    # Создаем один график с четырьмя подграфиками
+    fig, axes = plt.subplots(4, 1, figsize=(12, 12))
     fig.suptitle('Данные с датчиков', fontsize=16)
 
     for i, (column, label) in enumerate(metrics.items()):

@@ -14,7 +14,7 @@ def init_csv():
     try:
         with open(CSV_FILE, "x", newline="") as f:
             writer = csv.writer(f)
-            writer.writerow(["timestamp", "temperature_C", "humidity_air_%", "humidity_soil_adc"])
+            writer.writerow(["timestamp", "temperature_C", "humidity_air_%", "humidity_soil_adc", "co2_adc"])
     except FileExistsError:
         pass  # файл уже существует
 
@@ -43,7 +43,8 @@ def log_data():
                     now,
                     data.get("temperature"),
                     data.get("humidity_air"),
-                    data.get("humidity_soil")
+                    data.get("humidity_soil"),
+                    data.get("co2_adc")
                 ]
 
                 with open(CSV_FILE, "a", newline="") as f:
